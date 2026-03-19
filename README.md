@@ -83,3 +83,10 @@ Configuration is baked into the installed scripts at install time, so re-run `--
 - `bypass-rm` calls the backed-up original `rm` binary directly, so it permanently deletes without any wrapper overhead.
 - Files with identical names never collide in trash — the `timestamp_randomhex_` prefix guarantees uniqueness.
 - The `rm` wrapper silently accepts `-r`, `-f`, `-i` and similar flags (trashing is always safe regardless of flags), and propagates a non-zero exit code if any file could not be moved.
+
+---
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
