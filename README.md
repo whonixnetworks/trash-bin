@@ -10,7 +10,19 @@ A safe `rm` replacement for Linux that moves deleted files to a dated trash dire
 
 ## Installation
 
+**Quick install (wget):**
+
 ```bash
+wget https://raw.githubusercontent.com/whonixnetworks/trash-bin/main/trash
+chmod +x trash
+sudo ./trash --install
+```
+
+**Or clone the repo:**
+
+```bash
+git clone https://github.com/whonixnetworks/trash-bin.git
+cd trash-bin
 sudo ./trash --install
 ```
 
