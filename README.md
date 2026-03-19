@@ -63,6 +63,34 @@ When you `rm` a file it is moved to `/trash/YYYY-MM-DD/` under a unique name (`t
 
 A daily cron job removes dated directories older than `MAX_AGE_DAYS`.
 
+## ⚠️ Warnings
+
+Because this wrapper **replaces the `rm` binary system-wide**, _everything_ that calls `rm` is affected — not just your own terminal sessions.
+
+### Disk usage will grow faster than expected
+
+Package managers (`apt`, `pacman`, `dnf`), build systems (`make clean`), and system maintenance scripts all call `rm` internally. Every file they try to delete goes to `/trash` instead. On an active system this can accumulate gigabytes of trash silently, from operations you never directly initiated.
+
+**Mitigations:**
+- Keep `MAX_AGE_DAYS` low (the default of `7` is a reasonable ceiling)
+- Run `sudo trash-empty` periodically or after major package operations
+- Run `trash-list` after `apt upgrade` or similar to see what accumulated
+- Monitor `/trash` size with `trash-info`
+
+### Programs using syscalls are NOT intercepted
+
+Any program that deletes files via `unlink()`, `remove()`, or similar C-level syscalls bypasses the wrapper entirely. Only programs that shell out to the `rm` binary are affected. This is expected behaviour but means the trash is not a complete safety net for all deletions.
+
+### Package manager operations may leave ghost files
+
+When you `apt remove` a package, its files are "deleted" to trash rather than truly removed. The package manager reports success, but the files remain on disk until the cron cleanup runs. This is generally harmless but means disk space is not freed immediately.
+
+If you need to reclaim space after a package removal:
+
+```bash
+sudo trash-empty
+```
+
 ## Configuration
 
 Edit these variables at the top of the `trash` script before running `--install`:
